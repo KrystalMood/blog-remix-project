@@ -22,7 +22,7 @@ export const links: LinksFunction = () => [
   },
 ];
 
-import Header from "./components/Header";
+import Header from "./common/header";
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -35,6 +35,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <Header />
+
         {children}
         <ScrollRestoration />
         <Scripts />

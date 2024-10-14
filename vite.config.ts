@@ -12,6 +12,13 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(),
+    remix({
+      routes(defineRoutes) {
+        return defineRoutes((route) => {
+          route("/", "index/route.tsx", {index: true});
+        });
+      },
+    }),
   ],
   server: {
     port:4455
