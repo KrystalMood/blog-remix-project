@@ -7,26 +7,22 @@ import { useRef, useState } from "react";
 import { BsDot } from "react-icons/bs";
 
 export default function IndexContentSection(): JSX.Element {
-  // Use URL search params instead of state for pagination and filters
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get("page")) || 1;
   const selectedTab = (searchParams.get("tab") as TabType) || "All";
   const selectedOption =
     (searchParams.get("sort") as SortOption) || "Most Recent";
 
-  // Local UI state
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dropDownRef = useRef<HTMLDivElement>(null);
   const postsPerPage = 9;
 
-  // Handle dropdown toggle
   const toggleDropdown = (): void => setIsOpen(!isOpen);
 
-  // Update URL params instead of local state
   const handleOptionClick = (option: SortOption): void => {
     setSearchParams((prev) => {
       prev.set("sort", option);
-      prev.set("page", "1"); // Reset to first page on sort change
+      prev.set("page", "1");
       return prev;
     });
     setIsOpen(false);
@@ -35,7 +31,7 @@ export default function IndexContentSection(): JSX.Element {
   const handleTabClick = (tab: TabType): void => {
     setSearchParams((prev) => {
       prev.set("tab", tab);
-      prev.set("page", "1"); // Reset to first page on tab change
+      prev.set("page", "1");
       return prev;
     });
   };
@@ -47,13 +43,11 @@ export default function IndexContentSection(): JSX.Element {
     });
   };
 
-  // Filter and sort posts based on URL params
   let filteredPosts =
     selectedTab === "All"
       ? [...postList]
       : [...postList].filter((post) => post.category === selectedTab);
 
-  // Sort posts
   switch (selectedOption) {
     case "Most Recent":
       filteredPosts.sort((a, b) => b.date.getTime() - a.date.getTime());
@@ -69,13 +63,11 @@ export default function IndexContentSection(): JSX.Element {
       break;
   }
 
-  // Handle pagination
   const totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const indexOfLastPost = currentPage * postsPerPage;
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = filteredPosts.slice(indexOfFirstPost, indexOfLastPost);
 
-  // Click outside handler
   const handleClickOutside = (event: MouseEvent): void => {
     if (
       dropDownRef.current &&
@@ -85,10 +77,8 @@ export default function IndexContentSection(): JSX.Element {
     }
   };
 
-  // Add click outside listener
   if (typeof window !== "undefined") {
     document.addEventListener("mousedown", handleClickOutside);
-    // Clean up on component unmount
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }
 
@@ -147,11 +137,17 @@ export default function IndexContentSection(): JSX.Element {
       <div className="w-[90vw] mx-auto mt-8 grid grid-cols-3 gap-6">
         {currentPosts.map((post) => (
           <div key={post.id} className="bg-white p-4 rounded shadow">
-            <img
-              src={post.image}
-              alt={post.title}
-              className="object-cover h-[40vh] w-full rounded-lg shadow-md"
-            />
+            <div className="relative">
+              <img
+                src={post.image}
+                alt={post.title}
+                className="relative object-cover h-[40vh] w-full rounded-lg shadow-md"
+              />
+              <h2 className="absolute z-20 top-3 left-3 rounded-full px-3 py-2 shadow-md backdrop-blur-3xl font-semibold text-gray-100">
+                {post.category}
+              </h2>
+            </div>
+
             <div className="mt-2 space-x-1 flex text-gray-600 font-[200] items-center text-[0.92rem]">
               <p>
                 {new Intl.DateTimeFormat("en-US", {
@@ -181,7 +177,9 @@ export default function IndexContentSection(): JSX.Element {
                 />
                 <h2 className="font-semibold">{post.creatorProfile}</h2>
               </figure>
-              <h4 className="mr-3 underline text-sm font-[200] cursor-pointer">Read more</h4>
+              <h4 className="mr-3 underline text-sm font-[200] cursor-pointer">
+                Read more
+              </h4>
             </div>
           </div>
         ))}

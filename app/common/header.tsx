@@ -1,26 +1,29 @@
 import { useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { MdLanguage } from "react-icons/md";
-
 interface HeaderProps {}
 
 const Header: React.FC<HeaderProps> = () => {
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
   return (
-    <div className="w-full top-0 left-0 z-50 fixed h-16 flex justify-between items-center shadow-2xl px-6">
+    <div className="w-full top-0 left-0 z-50 fixed h-16 flex justify-between items-center shadow-xl px-6">
       <div>
         <h1 className="text-xl font-bold text-white">
-          Proto<span className="text-orange-400">Smasher</span>
+          Serene<span className="text-orange-400">Plume</span>
         </h1>
       </div>
       <nav>
         <ul className="flex gap-6 text-white font-semibold">
-          {["Home", "About", "Categories", "Contact"].map((item) => (
+          {["Home", "About Us", "Categories", "Contact"].map((item) => (
             <li key={item}>
               <a
-                href="/"
-                className="hover:text-orange-400 transtion-colors duration-200"
+                href={`${
+                  item === "Home"
+                    ? "/"
+                    : `/${item.toLowerCase().replace(/\s+/g, "-")}`
+                }`}
+                className="hover:text-orange-400 transition-colors duration-200"
               >
                 {item}
               </a>
