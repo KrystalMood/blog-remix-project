@@ -1,3 +1,4 @@
+import { useLocation } from "@remix-run/react";
 import { useEffect, useState } from "react";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { MdLanguage } from "react-icons/md";
@@ -7,18 +8,23 @@ const Header: React.FC<HeaderProps> = () => {
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(false);
   const [searchValue, setSearchValue] = useState<string>("");
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
+  const currentPage = useLocation();
 
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition >= window.innerHeight * 0.85);
-    };
+    if (currentPage.pathname === "/categories") {
+      setIsScrolled(true);
+    } else {
+      const handleScroll = () => {
+        const scrollPosition = window.scrollY;
+        setIsScrolled(scrollPosition >= window.innerHeight * 0.85);
+      };
 
-    window.addEventListener("scroll", handleScroll);
+      window.addEventListener("scroll", handleScroll);
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+      };
+    }
   }, []);
 
   return (
@@ -33,8 +39,8 @@ const Header: React.FC<HeaderProps> = () => {
         </h1>
       </div>
       <nav>
-        <ul className="flex gap-6 font-semibold">
-          {["Home", "About Us", "Categories", "Contact"].map((item) => (
+        <ul className="flex gap-7 font-semibold">
+          {["Home", "Categories", "About Us", "Contact Us"].map((item) => (
             <li key={item}>
               <a
                 href={`${
